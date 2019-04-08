@@ -2,16 +2,16 @@ var socket = io();
 
 //let coins = "BTC-USDT|FET-USDT|ETH-USDT|BNB-USDT|BTT-USDT|EOS-USDT|LTC-USDT|ONT-USDT|XRP-USDT|NEO-USDT|BCHABC-USDT|TRX-USDT|ADA-USDT|XLM-USDT|FET-BTC|ETH-BTC|BNB-BTC|ONT-BTC|EOS-BTC|XRP-BTC|TUSD-BTC|LTC-BTC|MDA-BTC|LUN-BTC|NEO-BTC|TRX-BTC|ADA-BTC|BCHABC-BTC|WAVES-BTC|ICX-BTC|XLM-BTC"
 
-let titles = coins.split("|");
+let coinTitles = coins.split("|");
 let reverseTitles = [];
 
 var coinDataArrays = [];
 var dataSets = [];
-for (var i in titles){
-    reverseTitles[titles[i]] = i;
-    coinDataArrays[titles[i]] = [];
+for (var i in coinTitles){
+    reverseTitles[coinTitles[i]] = i;
+    coinDataArrays[coinTitles[i]] = [];
     dataSet = {
-        "title": titles[i],
+        "title": coinTitles[i],
         "fieldMappings": [ {
           "fromField": "value",
           "toField": "value"
