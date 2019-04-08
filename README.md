@@ -6,7 +6,7 @@ $ sudo yarn start
 
 or
 
-$ sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``
+$ sudo setcap cap_net_bind_service=+ep \`readlink -f \\`which node\\``
 
 $ yarn start
 
