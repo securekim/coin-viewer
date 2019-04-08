@@ -1,6 +1,9 @@
 # coin-viewer
 coin viewer for mar-trader
 
+# Install
+$ yarn
+
 # Run
 $ sudo yarn start
 
