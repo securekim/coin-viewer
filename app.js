@@ -3,6 +3,34 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const config = require("config");
+const redis = require('redis')
+  , subscriber = redis.createClient(config.redis.port, config.redis.ip);
+
+function addSubscribe(fn) {
+  subscriber.on(fn, function(channel, message) {
+    console.log("Message '" + message + "' on channel '" + channel + "' arrived!")
+  });
+}
+
+addSubscribe('onConfiguration');
+addSubscribe('onBalanceInit');
+addSubscribe('onBalance');
+addSubscribe('onProp');
+addSubscribe('onTradeMeet');
+addSubscribe('onBetBid');
+addSubscribe('onBetAsk');
+addSubscribe('onBetCancelBid');
+addSubscribe('onBetCancelAsk');
+  
+// const RedisServer = require('redis-server');
+// const server = new RedisServer(3212);
+
+// server.open((err) => {
+//   if (err === null) {
+    
+//   }
+// });
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
