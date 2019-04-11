@@ -2,7 +2,7 @@
     "LOG_LEVEL": "debug",
     "redis" : {
         "ip" : "127.0.0.1"
-        ,"port" : 3211
+        ,"port" : 3212
     }, 
     "viewer" : {
         "port" : 80

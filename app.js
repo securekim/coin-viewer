@@ -5,7 +5,20 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const config = require("config");
 const redis = require('redis')
-  , subscriber = redis.createClient(config.redis.port, config.redis.ip);
+  , subscriber = redis.createClient(config.redis.port);
+const redisServer = require('redis-server');
+ 
+// Simply pass the port that you want a Redis server to listen on.
+const server = new redisServer(config.redis.port);
+ 
+server.open((err) => {
+  if (err === null) {
+    // You may now connect a client to the Redis
+    // server bound to port 6379.
+  } else {
+    console.log(err);
+  }
+});
 
 function addSubscribe(fn) {
   subscriber.on(fn, function(channel, message) {
