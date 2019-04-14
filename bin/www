@@ -8,7 +8,48 @@ var app = require('../app');
 var config = require('config');
 var debug = require('debug')('coin-viewer:server');
 var http = require('http');
+const { exec } = require('child_process');
 
+exec(__dirname+'/../../auto-mar/start.sh&', () => {
+  
+});
+
+/////////////////////////////////// REDIS START //////////////////////////////////////
+const RedisServer = require('redis-server');
+const redis = require('redis')
+ 
+// Simply pass the port that you want a Redis server to listen on.
+const redisServer = new RedisServer(config.redis.port);
+ 
+redisServer.open((err) => {
+  if (err === null) {
+  } else {
+    console.log(err);
+  }
+});
+subscriber = redis.createClient(config.redis.port);
+
+function addSubscribe(fn) {
+  subscriber.subscribe(fn);
+}
+
+addSubscribe('onConfiguration');
+addSubscribe('onBalanceInit');
+addSubscribe('onBalance');
+addSubscribe('onProp');
+addSubscribe('onTradeMeet');
+addSubscribe('onBetBid');
+addSubscribe('onBetAsk');
+addSubscribe('onBetCancelBid');
+addSubscribe('onBetCancelAsk');
+addSubscribe('onTest');
+
+subscriber.on("message", function(channel, message) {
+  console.log("Key '" + channel + "' Message '" + message );
+  io.emit(channel,message);
+});
+
+////////////////////////////////////// REDIS END /////////////////////////////////////////
 /**
  * Get port from environment and store in Express.
  */
@@ -30,6 +71,7 @@ io.on('connection', function(socket){
     console.log('user disconnected');
   });
 });
+
 
 /**
  * Listen on provided port, on all network interfaces.

@@ -3,48 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const config = require("config");
-const redis = require('redis')
-  , subscriber = redis.createClient(config.redis.port);
-const redisServer = require('redis-server');
- 
-// Simply pass the port that you want a Redis server to listen on.
-const server = new redisServer(config.redis.port);
- 
-server.open((err) => {
-  if (err === null) {
-    // You may now connect a client to the Redis
-    // server bound to port 6379.
-  } else {
-    console.log(err);
-  }
-});
-
-function addSubscribe(fn) {
-  subscriber.on(fn, function(channel, message) {
-    console.log("Message '" + message + "' on channel '" + channel + "' arrived!")
-  });
-}
-
-addSubscribe('onConfiguration');
-addSubscribe('onBalanceInit');
-addSubscribe('onBalance');
-addSubscribe('onProp');
-addSubscribe('onTradeMeet');
-addSubscribe('onBetBid');
-addSubscribe('onBetAsk');
-addSubscribe('onBetCancelBid');
-addSubscribe('onBetCancelAsk');
   
-// const RedisServer = require('redis-server');
-// const server = new RedisServer(3212);
-
-// server.open((err) => {
-//   if (err === null) {
-    
-//   }
-// });
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var coinsRouter = require('./routes/coins');

@@ -2,6 +2,7 @@ var socket = io();
 
 //let coins = "BTC-USDT|FET-USDT|ETH-USDT|BNB-USDT|BTT-USDT|EOS-USDT|LTC-USDT|ONT-USDT|XRP-USDT|NEO-USDT|BCHABC-USDT|TRX-USDT|ADA-USDT|XLM-USDT|FET-BTC|ETH-BTC|BNB-BTC|ONT-BTC|EOS-BTC|XRP-BTC|TUSD-BTC|LTC-BTC|MDA-BTC|LUN-BTC|NEO-BTC|TRX-BTC|ADA-BTC|BCHABC-BTC|WAVES-BTC|ICX-BTC|XLM-BTC"
 
+//coins = from server.
 let coinTitles = coins.split("|");
 let reverseTitles = [];
 
@@ -27,6 +28,7 @@ for (var i in coinTitles){
 
 var chart = AmCharts.makeChart( "chartdiv", {
     "type": "stock",
+    "theme": "light",
     "glueToTheEnd": true,
 // Defining data sets
 "dataSets": dataSets,
@@ -64,27 +66,27 @@ var chart = AmCharts.makeChart( "chartdiv", {
   // Period Selector
   "periodSelector": {
     "position": "left",
-    "periods": [ {
-      "period": "DD",
-      "selected":true,
-      "count": 1,
-      "label": "1 Days"
+    "periods": [{
+        "period": "DD",
+        "count": 10,
+        "label": "10 days"
     }, {
-      "period": "MM",
-      "count": 1,
-      "label": "1 month"
+        "period": "MM",
+        "selected": true,
+        "count": 1,
+        "label": "1 month"
     }, {
-      "period": "YYYY",
-      "count": 1,
-      "label": "1 year"
+        "period": "YYYY",
+        "count": 1,
+        "label": "1 year"
     }, {
-      "period": "YTD",
-      "label": "YTD"
+        "period": "YTD",
+        "label": "YTD"
     }, {
-      "period": "MAX",
-      "label": "MAX"
-    } ]
-  },
+        "period": "MAX",
+        "label": "MAX"
+    }]
+},
 
   // Data Set Selector
   "dataSetSelector": {
@@ -116,23 +118,25 @@ socket.on('onBalance', function(msg){
 });
 
 var myDate = new Date();
-
+var testArr = [];
 socket.on('onTradeMeet', function(msg){
     let obj = JSON.parse(msg);
 
-    myDate.setDate( myDate.getDate() + 1 );
-
+    tmp = myDate.setDate( myDate.getDate() + 1 );
+    testArr.push(new Date(tmp).toUTCString());
     chart.dataSets[reverseTitles[obj.coin]].dataProvider.push({
-        date: myDate,
+        date: new Date(tmp).toUTCString(),
         value : obj.price,
         volume : 10
     })
-    console.log("coin : " + obj.coin +" Date : "  + myDate + " Price : "+obj.price);
+    console.log(chart.dataSets[reverseTitles[obj.coin]].dataProvider)
+    //console.log("coin : " + obj.coin +" Date : "  + myDate + " Price : "+obj.price);
     // coinDataArrays[obj.coin].push({
     //     date: obj.time,
     //     value : obj.price
     // });
-    chart.validateData();
+
+   chart.validateData();
 });
 
 socket.on('onProp', function(msg){
@@ -145,3 +149,9 @@ socket.on('onBetCancelBid', function(msg){
 });
 socket.on('onBetCancelAsk', function(msg){
 });
+
+setInterval(()=>{
+  // if (chart.mouseDown)
+  //       return;
+  //chart.validateData();
+},1000)
