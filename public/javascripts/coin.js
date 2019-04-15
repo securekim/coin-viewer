@@ -144,30 +144,34 @@ chart.categoryAxesSettings.minPeriod = "fff"
 
 //socket.emit('index', 'Emit from html.');
 socket.on('onConfiguration', function(msg){
-  console.log("onConfiguration");
+  console.log("-----------onConfiguration------------");
+  console.log(msg);
+  console.log("--------------------------------------");
 });
 socket.on('onBalanceInit', function(msg){
   console.log("onBalanceInit");
+  console.log(msg);
+  console.log("--------------------------------------");
 });
 socket.on('onBalance', function(msg){
     //let obj = JSON.parse(msg);
     console.log("onBalance");
+    console.log(msg);
+    console.log("--------------------------------------");
 });
 
 var myDate = new Date();
 socket.on('onTradeMeet', function(msg){
     let obj = JSON.parse(msg);
-
-    tmp = myDate.setSeconds( myDate.getSeconds() + 1 );
-    //console.log(new Date(obj.time).getMilliseconds());
-    //tmp = new Date(obj.time);
+    //tmp = new Date(obj.time).toUTCString();
+    tmp = new Date().toUTCString();
     chart.dataSets[reverseTitles[obj.coin]].dataProvider.push({
         //date: new Date(tmp).toUTCString(),
-        date: new Date(tmp).toUTCString(),
+        date: tmp,
         value : obj.price,
         volume : 10
     })
-    console.log(chart.dataSets[reverseTitles[obj.coin]].dataProvider)
+    //console.log(chart.dataSets[reverseTitles[obj.coin]].dataProvider)
     //console.log("coin : " + obj.coin +" Date : "  + myDate + " Price : "+obj.price);
     // coinDataArrays[obj.coin].push({
     //     date: obj.time,
@@ -178,19 +182,30 @@ socket.on('onTradeMeet', function(msg){
 });
 
 socket.on('onProp', function(msg){
-  console.log("onProp");
+  // console.log("onProp");
+  // console.log(msg);
+  // console.log("--------------------------------------");
+  // Key 'onProp' Message '{"coin":"ETH-USDT","time":"2019-02-14T19:13:38.160Z","ask":{"prop":[[121.54,18.14953],[121.55,28.15558],[121.57,29.21923],[121.59,15.08159],[121.6,3.94695],[121.62,8.9026],[121.63,40.79746],[121.64,22.97567],[121.65,2.11],[121.66,0.12329]],"sum":169.36},"bid":{"prop":[[121.5,13.14046],[121.49,0.16379],[121.46,4],[121.45,1],[121.44,16],[121.43,0.16496],[121.41,3.51386],[121.36,46.13749],[121.35,4.2768],[121.34,8.86467]],"sum":97.16},"exchange":"BINANCE"}
 });
 socket.on('onBetBid', function(msg){
   console.log("onBetBid");
+  console.log(msg);
+  console.log("--------------------------------------");
 });
 socket.on('onBetAsk', function(msg){
   console.log("onBetAsk");
+  console.log(msg);
+  console.log("--------------------------------------");
 });
 socket.on('onBetCancelBid', function(msg){
   console.log("onBetCancelBid");
+  console.log(msg);
+  console.log("--------------------------------------");
 });
 socket.on('onBetCancelAsk', function(msg){
   console.log("onBetCancelAsk");
+  console.log(msg);
+  console.log("--------------------------------------");
 });
 
 setInterval(()=>{
