@@ -30,6 +30,8 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "type": "stock",
     "theme": "light",
     "glueToTheEnd": true,
+    period : "fff",
+    
 // Defining data sets
 "dataSets": dataSets,
 
@@ -60,26 +62,54 @@ var chart = AmCharts.makeChart( "chartdiv", {
   // Scrollbar settings
   "chartScrollbarSettings": {
     "graph": "g1",
-    "usePeriod": "WW"
+    "usePeriod": "fff"
   },
 
   // Period Selector
   "periodSelector": {
     "position": "left",
     "periods": [{
-        "period": "DD",
+        "period": "fff",
         "count": 10,
-        "label": "10 days"
+        "label": "10 ms",
+        "format": "NN:SS:QQQ"
     }, {
-        "period": "MM",
+        "period": "ss",
         "selected": true,
         "count": 1,
-        "label": "1 month"
+        "label": "1 sec",
+        "format": "NN:SS:QQQ"
     }, {
+        "period": "mm",
+        "count": 1,
+        "label": "1 minute",
+        "format": "JJ:NN"
+      }, {
+        "period": "hh",
+        "count": 1,
+        "label": "1 hour",
+        "format": "JJ:NN"
+      }, {
+        "period": "DD",
+        "count": 1,
+        "label": "1 date",
+        "format": "MMM DD"
+      }, {
+        "period": "WW",
+        "count": 1,
+        "label": "1 week",
+        "format": "MMM DD"
+      }, {
+        "period": "MM",
+        "count": 1,
+        "label": "1 month",
+        "format": "MMM"
+      }, {
         "period": "YYYY",
         "count": 1,
-        "label": "1 year"
-    }, {
+        "label": "1 year",
+        "format": "YYYY"
+      }, {
         "period": "YTD",
         "label": "YTD"
     }, {
@@ -108,23 +138,31 @@ var chart = AmCharts.makeChart( "chartdiv", {
   } ]
 } );
 
+//chart.categoryAxesSettings.groupToPeriods = ["fff", "ss", "10ss", "30ss", "mm", "10mm", "30mm", "hh", "DD", "WW", "MM", "YYYY"];
+chart.categoryAxesSettings.minPeriod = "fff"
+//chart.periodSelector.dateFormat = "YYYY-MM-DD"
+
 //socket.emit('index', 'Emit from html.');
 socket.on('onConfiguration', function(msg){
+  console.log("onConfiguration");
 });
 socket.on('onBalanceInit', function(msg){
+  console.log("onBalanceInit");
 });
 socket.on('onBalance', function(msg){
     //let obj = JSON.parse(msg);
+    console.log("onBalance");
 });
 
 var myDate = new Date();
-var testArr = [];
 socket.on('onTradeMeet', function(msg){
     let obj = JSON.parse(msg);
 
-    tmp = myDate.setDate( myDate.getDate() + 1 );
-    testArr.push(new Date(tmp).toUTCString());
+    tmp = myDate.setSeconds( myDate.getSeconds() + 1 );
+    //console.log(new Date(obj.time).getMilliseconds());
+    //tmp = new Date(obj.time);
     chart.dataSets[reverseTitles[obj.coin]].dataProvider.push({
+        //date: new Date(tmp).toUTCString(),
         date: new Date(tmp).toUTCString(),
         value : obj.price,
         volume : 10
@@ -140,14 +178,19 @@ socket.on('onTradeMeet', function(msg){
 });
 
 socket.on('onProp', function(msg){
+  console.log("onProp");
 });
 socket.on('onBetBid', function(msg){
+  console.log("onBetBid");
 });
 socket.on('onBetAsk', function(msg){
+  console.log("onBetAsk");
 });
 socket.on('onBetCancelBid', function(msg){
+  console.log("onBetCancelBid");
 });
 socket.on('onBetCancelAsk', function(msg){
+  console.log("onBetCancelAsk");
 });
 
 setInterval(()=>{
