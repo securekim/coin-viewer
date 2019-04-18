@@ -3,12 +3,16 @@ var socket = io();
 //let coins = "BTC-USDT|FET-USDT|ETH-USDT|BNB-USDT|BTT-USDT|EOS-USDT|LTC-USDT|ONT-USDT|XRP-USDT|NEO-USDT|BCHABC-USDT|TRX-USDT|ADA-USDT|XLM-USDT|FET-BTC|ETH-BTC|BNB-BTC|ONT-BTC|EOS-BTC|XRP-BTC|TUSD-BTC|LTC-BTC|MDA-BTC|LUN-BTC|NEO-BTC|TRX-BTC|ADA-BTC|BCHABC-BTC|WAVES-BTC|ICX-BTC|XLM-BTC"
 
 //coins = from server.
-let coinTitles = coins.split("|");
+let coinTitles = []; //= coins.split("|");
+let coinsArr = coins.split("|");
 let reverseTitles = [];
+let coinDataArrays = [];
+let dataSets = [];
+let chart;
 
-var coinDataArrays = [];
-var dataSets = [];
-for (var i in coinTitles){
+function init(){
+
+  for (var i in coinTitles){
     reverseTitles[coinTitles[i]] = i;
     coinDataArrays[coinTitles[i]] = [];
     dataSet = {
@@ -32,7 +36,7 @@ for (var i in coinTitles){
     dataSets.push(dataSet);
 }
 
-var chart = AmCharts.makeChart( "chartdiv", {
+chart = AmCharts.makeChart( "chartdiv", {
     "type": "stock",
     "theme": "light",
     "glueToTheEnd": true,
@@ -148,6 +152,8 @@ var chart = AmCharts.makeChart( "chartdiv", {
 chart.categoryAxesSettings.minPeriod = "fff"
 //chart.periodSelector.dateFormat = "YYYY-MM-DD"
 
+
+}
 //socket.emit('index', 'Emit from html.');
 socket.on('onConfiguration', function(msg){
   console.log("-----------onConfiguration------------");
@@ -157,46 +163,65 @@ socket.on('onConfiguration', function(msg){
 socket.on('onBalanceInit', function(msg){
   console.log("onBalanceInit");
   console.log(msg);
+  let obj = JSON.parse(msg);
+  obj = obj.balance;
+    tmp = new Date().toUTCString();
+    for(var i in obj){
+        var coin = i + "";
+        if(!coinsArr.includes(coin)) continue;
+        var myJson = {
+          date: tmp,
+          value : 0,
+          volume : obj[i].amount
+      };
+      console.log("onBalanceInit : ", coin, obj[i].amount);
+      //chart.dataSets[reverseTitles[coin]].dataProvider.push(myJson);
+      coinTitles.push(coin);
+    
+    }
+    init();
   console.log("--------------------------------------");
 });
 
 socket.on('onBalance', function(msg){
-    // let obj = JSON.parse(msg);
-    // tmp = new Date().toUTCString();
-    // for(var i in obj){
-    //     var coin = i;
-    //     if(typeof chart.dataSets[reverseTitles[coin]] == "undefined") continue;
-
-    //     var lastValue = chart.dataSets[reverseTitles[coin]].dataProvider.pop().value;
-    //     var myJson = {
-    //       date: tmp,
-    //       value : lastValue,
-    //       volume : obj[i].amount
-    //   };
-    //   console.log("onBalance : ", coin, myJson);
-    //   chart.dataSets[reverseTitles[coin]].dataProvider.push(myJson);
-    
-    // }
-});
-
-var myDate = new Date();
-socket.on('onTradeMeet', function(msg){
     let obj = JSON.parse(msg);
     tmp = new Date().toUTCString();
-    
-    var lastData = chart.dataSets[reverseTitles[obj.coin]].dataProvider.pop();
-    
-    if(typeof lastData == "undefined" || typeof lastData.volume == "undefined") lastVolume = 10;
-    var myJson = {
-      date: tmp,
-      value : obj.price,
-      volume : 10
-  }
-  console.log("onTradeMeet : ", obj.coin, myJson);
-    chart.dataSets[reverseTitles[obj.coin]].dataProvider.push(myJson)
+    for(var i in obj){
+        var coin = i;
+        if(typeof chart.dataSets[reverseTitles[coin]] == "undefined") continue;
 
-  chart.validateData();
+        var provider = chart.dataSets[reverseTitles[coin]].dataProvider;
+        var lastData = provider[provider.length - 1];
+        if(typeof lastData == "undefined" || typeof lastData.value == "undefined") lastValue = 0;
+        else lastValue = lastData.value;
+
+        var myJson = {
+          date: tmp,
+          value : lastValue,
+          volume : obj[i].amount
+      };
+      console.log("onBalance : ", coin, obj[i].amount);
+      chart.dataSets[reverseTitles[coin]].dataProvider.push(myJson);
+    
+    }
 });
+
+//잘되던것
+socket.on('onTradeMeet', function(msg){
+  let obj = JSON.parse(msg);
+  tmp = new Date().toUTCString();
+  var provider = chart.dataSets[reverseTitles[obj.coin]].dataProvider;
+  var lastData = provider[provider.length - 1];
+  if(typeof lastData == "undefined" || typeof lastData.volume == "undefined") lastVolume = 0;
+  else lastVolume = lastData.volume;
+    chart.dataSets[reverseTitles[obj.coin]].dataProvider.push({
+        date: tmp,
+        value : obj.price,
+        volume : lastVolume
+    })
+   //chart.validateData();
+  });
+
 
 socket.on('onProp', function(msg){
   // console.log("onProp");
