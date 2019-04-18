@@ -10,9 +10,9 @@ var debug = require('debug')('coin-viewer:server');
 var http = require('http');
 const { exec } = require('child_process');
 
-exec(__dirname+'/../../auto-mar/start.sh&', () => {
+// exec(__dirname+'/../../auto-mar/start.sh&', () => {
   
-});
+// });
 
 /////////////////////////////////// REDIS START //////////////////////////////////////
 const RedisServer = require('redis-server');

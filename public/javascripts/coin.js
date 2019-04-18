@@ -20,7 +20,13 @@ for (var i in coinTitles){
           "fromField": "volume",
           "toField": "volume"
         } ],
-        "dataProvider": [],
+        "dataProvider": [
+        //   {
+        //   date : new Date(),
+        //   value : 0,
+        //   volume : 0
+        // }
+      ],
         "categoryField": "date"
       }
     dataSets.push(dataSet);
@@ -153,32 +159,43 @@ socket.on('onBalanceInit', function(msg){
   console.log(msg);
   console.log("--------------------------------------");
 });
+
 socket.on('onBalance', function(msg){
-    //let obj = JSON.parse(msg);
-    console.log("onBalance");
-    console.log(msg);
-    console.log("--------------------------------------");
+    // let obj = JSON.parse(msg);
+    // tmp = new Date().toUTCString();
+    // for(var i in obj){
+    //     var coin = i;
+    //     if(typeof chart.dataSets[reverseTitles[coin]] == "undefined") continue;
+
+    //     var lastValue = chart.dataSets[reverseTitles[coin]].dataProvider.pop().value;
+    //     var myJson = {
+    //       date: tmp,
+    //       value : lastValue,
+    //       volume : obj[i].amount
+    //   };
+    //   console.log("onBalance : ", coin, myJson);
+    //   chart.dataSets[reverseTitles[coin]].dataProvider.push(myJson);
+    
+    // }
 });
 
 var myDate = new Date();
 socket.on('onTradeMeet', function(msg){
     let obj = JSON.parse(msg);
-    //tmp = new Date(obj.time).toUTCString();
     tmp = new Date().toUTCString();
-    chart.dataSets[reverseTitles[obj.coin]].dataProvider.push({
-        //date: new Date(tmp).toUTCString(),
-        date: tmp,
-        value : obj.price,
-        volume : 10
-    })
-    //console.log(chart.dataSets[reverseTitles[obj.coin]].dataProvider)
-    //console.log("coin : " + obj.coin +" Date : "  + myDate + " Price : "+obj.price);
-    // coinDataArrays[obj.coin].push({
-    //     date: obj.time,
-    //     value : obj.price
-    // });
+    
+    var lastData = chart.dataSets[reverseTitles[obj.coin]].dataProvider.pop();
+    
+    if(typeof lastData == "undefined" || typeof lastData.volume == "undefined") lastVolume = 10;
+    var myJson = {
+      date: tmp,
+      value : obj.price,
+      volume : 10
+  }
+  console.log("onTradeMeet : ", obj.coin, myJson);
+    chart.dataSets[reverseTitles[obj.coin]].dataProvider.push(myJson)
 
-   chart.validateData();
+  chart.validateData();
 });
 
 socket.on('onProp', function(msg){
@@ -209,7 +226,7 @@ socket.on('onBetCancelAsk', function(msg){
 });
 
 setInterval(()=>{
-  // if (chart.mouseDown)
-  //       return;
-  //chart.validateData();
+   if (chart.mouseDown)
+         return;
+  chart.validateData();
 },1000)
