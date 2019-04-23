@@ -15,18 +15,18 @@ const { exec } = require('child_process');
 // });
 
 /////////////////////////////////// REDIS START //////////////////////////////////////
-const RedisServer = require('redis-server');
+// const RedisServer = require('redis-server');
 const redis = require('redis')
  
 // Simply pass the port that you want a Redis server to listen on.
-const redisServer = new RedisServer(config.redis.port);
+// const redisServer = new RedisServer(config.redis.port);
  
-redisServer.open((err) => {
-  if (err === null) {
-  } else {
-    console.log(err);
-  }
-});
+// redisServer.open((err) => {
+//   if (err === null) {
+//   } else {
+//     console.log(err);
+//   }
+// });
 subscriber = redis.createClient(config.redis.port);
 
 function addSubscribe(fn) {
