@@ -31,7 +31,9 @@ function init(){
         //   volume : 0
         // }
       ],
-        "categoryField": "date"
+        "categoryField": "date",
+        /////////////////////////////////////////EVENT///////////////////////////////////////////////
+        "stockEvents": []
       }
     dataSets.push(dataSet);
 }
@@ -165,12 +167,11 @@ socket.on('onBalanceInit', function(msg){
   console.log(msg);
   let obj = JSON.parse(msg);
   obj = obj.balance;
-    tmp = new Date().toUTCString();
     for(var i in obj){
         var coin = i + "";
         if(!coinsArr.includes(coin)) continue;
         var myJson = {
-          date: tmp,
+          date: new Date().toUTCString(),
           value : 0,
           volume : obj[i].amount
       };
@@ -185,7 +186,6 @@ socket.on('onBalanceInit', function(msg){
 
 socket.on('onBalance', function(msg){
     let obj = JSON.parse(msg);
-    tmp = new Date().toUTCString();
     for(var i in obj){
         var coin = i;
         if(typeof chart.dataSets[reverseTitles[coin]] == "undefined") continue;
@@ -196,11 +196,11 @@ socket.on('onBalance', function(msg){
         else lastValue = lastData.value;
 
         var myJson = {
-          date: tmp,
+          date: new Date().toUTCString(),
           value : lastValue,
           volume : obj[i].amount
       };
-      console.log("onBalance : ", coin, obj[i].amount);
+      //console.log("onBalance : ", coin, obj[i].amount);
       chart.dataSets[reverseTitles[coin]].dataProvider.push(myJson);
     
     }
@@ -229,15 +229,35 @@ socket.on('onProp', function(msg){
   // console.log("--------------------------------------");
   // Key 'onProp' Message '{"coin":"ETH-USDT","time":"2019-02-14T19:13:38.160Z","ask":{"prop":[[121.54,18.14953],[121.55,28.15558],[121.57,29.21923],[121.59,15.08159],[121.6,3.94695],[121.62,8.9026],[121.63,40.79746],[121.64,22.97567],[121.65,2.11],[121.66,0.12329]],"sum":169.36},"bid":{"prop":[[121.5,13.14046],[121.49,0.16379],[121.46,4],[121.45,1],[121.44,16],[121.43,0.16496],[121.41,3.51386],[121.36,46.13749],[121.35,4.2768],[121.34,8.86467]],"sum":97.16},"exchange":"BINANCE"}
 });
-socket.on('onBetBid', function(msg){
+socket.on('onBetBid', function(msg){ // 오를거에 건다
   console.log("onBetBid");
   console.log(msg);
+  let obj = JSON.parse(JSON.stringify(msg));
+  console.log(obj.coin);
+  if(typeof obj.coin == "undefined") obj.coin = "BNB-USDT"
   console.log("--------------------------------------");
+  chart.dataSets[1].stockEvents.push({
+      date: new Date(),
+      type: "arrowUp",
+      backgroundColor: "#00CC00",
+      graph: "g1",
+      description: "BetBid"
+  })
 });
-socket.on('onBetAsk', function(msg){
+socket.on('onBetAsk', function(msg){ // 판매
   console.log("onBetAsk");
   console.log(msg);
+  let obj = JSON.parse(JSON.stringify(msg));
+  console.log(msg.coin);
+  if(typeof obj.coin == "undefined") obj.coin = "BNB-USDT"
   console.log("--------------------------------------");
+  chart.dataSets[1].stockEvents.push({
+      date: new Date(),
+      type: "arrowDown",
+      backgroundColor: "#CC0000",
+      graph: "g1",
+      description: "BetAsk"
+  })
 });
 socket.on('onBetCancelBid', function(msg){
   console.log("onBetCancelBid");

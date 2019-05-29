@@ -11,6 +11,11 @@ router.get('/test', function(req, res, next) {
   res.render('test');
 });
 
+router.get('/test2', function(req, res, next) {
+  res.render('test2');
+});
+
+
 router.get('/coin', (req, res, next)=>{
   res.render('coin', {
     coins : config.coins
