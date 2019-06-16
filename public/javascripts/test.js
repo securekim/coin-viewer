@@ -23,8 +23,51 @@ function generateChartData() {
 
 var chart = AmCharts.makeChart( "chartdiv", {
   "type": "stock",
-
   "theme": "light",  
+  // valueAxis: [{
+  //   tickLength: 2,
+  //   axisAlpha: 2,
+  //   showFirstLabel: false,
+  //   showLastLabel: false,
+
+  //   guides: [{
+  //     value: 500,
+  //     toValue: 600,
+  //     fillColor: "#00CC00",
+  //     inside: true,
+  //     fillAlpha: 0.2,
+  //     lineAlpha: 0
+  //   }]
+
+  // }],
+
+  categoryAxis: {
+    parseDates: true,
+    minPeriod: "DD",
+    gridAlpha: 0.1,
+    minorGridAlpha: 0.1,
+    axisAlpha: 0,
+    minorGridEnabled: true,
+    inside: true
+  },
+  valueAxes: [{
+  
+    tickLength: 0,
+    axisAlpha: 0,
+    showFirstLabel: false,
+    showLastLabel: false,
+
+    guides: [{
+      value: 300,
+      toValue: 550,
+      fillColor: "#00CC00",
+      inside: true,
+      fillAlpha: 0.2,
+      lineAlpha: 0
+    }]
+
+  }],
+
   "dataSets": [ {
     "color": "#b0de09",
     "fieldMappings": [ {
@@ -36,6 +79,10 @@ var chart = AmCharts.makeChart( "chartdiv", {
     } ],
     "dataProvider": chartData,
     "categoryField": "date",
+
+
+///////////////////
+    
     // EVENTS
     "stockEvents": [ {
       "date": new Date( 2010, 8, 19 ),
@@ -161,6 +208,7 @@ var chart = AmCharts.makeChart( "chartdiv", {
     } ]
   },
 
+
   "panelsSettings": {
     "usePrefixes": true
   },
@@ -175,3 +223,33 @@ function toggleEvents( shown ) {
   else
     chart.hideStockEvents();
 }
+
+
+// var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+// valueAxis.logarithmic = true;
+// valueAxis.renderer.minGridDistance = 20;
+
+// var range = valueAxis.axisRanges.create();
+// range.value = 800;
+// range.grid.stroke = am4core.color("#396478");
+// range.grid.strokeWidth = 1;
+// range.grid.strokeOpacity = 1;
+// range.grid.strokeDasharray = "3,3";
+// range.label.inside = true;
+// range.label.text = "Average";
+// range.label.fill = range.grid.stroke;
+// range.label.verticalCenter = "bottom";
+
+
+
+// var guide = new AmCharts.Guide();
+// guide.date = 500;
+// guide.lineAlpha = 1;
+// guide.lineColor = "#c44";
+// guide.label = "guide";
+// guide.position = "top";
+// guide.inside = true;
+// guide.labelRotation = 90;
+// chart.categoryAxis.addGuide( guide );
+// chart.validateData();
+

@@ -5,6 +5,8 @@
      var chartData2 = [];
      var chartData3 = [];
      var chartData4 = [];
+
+
      function generateChartData() {
      var firstDate = new Date();
      firstDate.setDate( firstDate.getDate() - 500 );
@@ -125,7 +127,26 @@
      "comparable": true,
      "compareField": "value"
      } ],
-     "stockLegend": {}
+     "stockLegend": {},
+
+//chart.panels[0].valueAxes[0].guides[0].value = 1000
+     "valueAxes": [ {
+        "guides": [ {
+          "value": 850,
+          "lineAlpha": 0.8,
+          "lineColor": "#c00",
+          "label": "Guide #1",
+          "position": "right"
+        }, {
+          "value": 650,
+          "lineAlpha": 0.8,
+          "lineColor": "#0c0",
+          "label": "Guide #2",
+          "position": "right"
+        } ]
+      } ]
+
+
      }, {
      "title": "Volume",
      "percentHeight": 40,
@@ -234,3 +255,18 @@
      } );
      chart.validateData();
      }, 1000 );
+
+let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.logarithmic = true;
+valueAxis.renderer.minGridDistance = 20;
+
+let range = valueAxis.axisRanges.create();
+range.value = 800;
+range.grid.stroke = am4core.color("#396478");
+range.grid.strokeWidth = 1;
+range.grid.strokeOpacity = 1;
+range.grid.strokeDasharray = "3,3";
+range.label.inside = true;
+range.label.text = "Average";
+range.label.fill = range.grid.stroke;
+range.label.verticalCenter = "bottom";

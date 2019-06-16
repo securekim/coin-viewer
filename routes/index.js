@@ -15,6 +15,9 @@ router.get('/test2', function(req, res, next) {
   res.render('test2');
 });
 
+router.get('/test_guideLine', function(req, res, next) {
+  res.render('test_guideLine');
+});
 
 router.get('/coin', (req, res, next)=>{
   res.render('coin', {

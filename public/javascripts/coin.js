@@ -58,7 +58,31 @@ chart = AmCharts.makeChart( "chartdiv", {
       "comparable": true,
       "compareField": "value"
     } ],
-    "stockLegend": {}
+    "stockLegend": {},
+
+    //chart.panels[0].valueAxes[0].guides[0].value = 1000
+    "valueAxes": [ {
+      "guides": [ {
+        "value": 8.73,
+        "lineAlpha": 0.8,
+        "lineColor": "#e00",
+        "label": "MIN",
+        "position": "right"
+      }, {
+        "value": 8.77,
+        "lineAlpha": 0.8,
+        "lineColor": "#000",
+        "label": "NOW",
+        "position": "right"
+      }, {
+        "value": 8.80,
+        "lineAlpha": 0.8,
+        "lineColor": "#0e0",
+        "label": "MAX",
+        "position": "right"
+      } ]
+    } ]
+
   }, {
     "title": "Volume",
     "percentHeight": 40,
